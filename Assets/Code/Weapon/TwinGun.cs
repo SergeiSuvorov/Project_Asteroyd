@@ -2,41 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TwinGun : IWeapon
+public class TwinGun : BallisticWeapon, IWeapon
 {
-    private Transform _1stBarrelTransform;
-    private Transform _2ndBarrelTransform;
-    private GameObject _bullet;
-    private float _force;
-
+    private Transform _firstBarrelTransform;
+    private Transform _secondBarrelTransform;
 
     public void Shoot(Vector3 direction)
     {
-        var temAmmunition1 = Object.Instantiate(_bullet, _1stBarrelTransform.position, _1stBarrelTransform.rotation);
-        var bullet = temAmmunition1.GetComponent<Bullet>();
+        var bullet = ShootFromBarrel(_firstBarrelTransform);
         bullet.Shooting(direction, _force);
 
-        var temAmmunition2 = Object.Instantiate(_bullet, _2ndBarrelTransform.position, _1stBarrelTransform.rotation);
-        bullet = temAmmunition2.GetComponent<Bullet>();
+        bullet = ShootFromBarrel(_secondBarrelTransform);
         bullet.Shooting(direction, _force);
     }
 
-    public void Instance(Transform barrel, GameObject ammoGameObject, float shootStartForce)
+    public void Instantiate(Transform barrel, GameObject ammo, float shootStartForce)
     {
-        _bullet = ammoGameObject;
+        CreateBulletPool(ammo);
         _force = shootStartForce;
-        Vector3 _1stBarelPosition = new Vector3(barrel.position.x - 0.5f, barrel.position.y );
-        Vector3 _2ndBarelPosition = new Vector3(barrel.position.x + 0.5f , barrel.position.y );
+        Vector3 firstBarrelPosition = new Vector3(barrel.position.x - 0.5f, barrel.position.y );
+        Vector3 secondBarrelPosition = new Vector3(barrel.position.x + 0.5f , barrel.position.y );
 
-        GameObject _1stBarrel= new GameObject("_1stBarrel");
-        _1stBarrel.transform.parent = barrel;
-        _1stBarrel.transform.position = _1stBarelPosition;
-        _1stBarrelTransform = _1stBarrel.transform;
+        _firstBarrelTransform = CreateBarrel("1stBarrel", barrel, firstBarrelPosition);
+        _secondBarrelTransform = CreateBarrel("2ndBarrel", barrel, secondBarrelPosition);
+    }
 
-        GameObject _2ndBarrel = new GameObject("_2ndBarrel");
-        _2ndBarrel.transform.parent = barrel;
-        _2ndBarrel.transform.position = _2ndBarelPosition;
-        _2ndBarrelTransform = _2ndBarrel.transform;
+    private Transform CreateBarrel(string barrelName, Transform barrelParent, Vector2 barrelPosition)
+    {
+        GameObject barrel = new GameObject(barrelName);
+        barrel.transform.parent = barrelParent;
+        barrel.transform.position = barrelPosition;
+        var barrelTransform = barrel.transform;
 
+        return barrelTransform;
     }
 }

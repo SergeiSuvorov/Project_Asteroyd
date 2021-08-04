@@ -2,27 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : IWeapon
+public class Gun : BallisticWeapon, IWeapon
 {
     private Transform _barrel;
-    private GameObject _bullet;
-    private Rigidbody2D _bulletRigidbody;
-    private float _force;
-    
 
-    
     public void Shoot(Vector3 direction)
     {
-        var temAmmunition = Object.Instantiate(_bullet, _barrel.position, _barrel.rotation);
-        var bullet = temAmmunition.GetComponent<Bullet>();
+        var bullet = ShootFromBarrel(_barrel);
         bullet.Shooting(direction, _force);
     }
 
-   
-    public void Instance(Transform barrel, GameObject ammo, float shootStartForce)
+    public void Instantiate(Transform barrel, GameObject ammo, float shootStartForce)
     {
+        CreateBulletPool(ammo);
         _barrel = barrel;
-        _bullet = ammo;
         _force = shootStartForce;
     }
 }
