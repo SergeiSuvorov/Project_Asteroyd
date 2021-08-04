@@ -6,14 +6,14 @@ namespace Asteroids
 {
     public class InputController : IExecute
     {
-        private float horizontalMoveInput;
-        private float verticalMoveInput;
-        private GameController gameController;
+        private float _horizontalMoveInput;
+        private float _verticalMoveInput;
+        private GameController _gameController;
         public bool IsActive { get; private set; }
 
         public InputController(GameController GameController)
         {
-            gameController = GameController;
+            _gameController = GameController;
             IsActive = true;
         }
 
@@ -23,13 +23,13 @@ namespace Asteroids
         public void CheckInput()
         {
 
-            horizontalMoveInput = 0;
-            verticalMoveInput = 0;
+            _horizontalMoveInput = 0;
+            _verticalMoveInput = 0;
             bool isShooting = false;
             bool IsChangeAcceleretion = false;
 
-            horizontalMoveInput = Input.GetAxis("Horizontal");
-            verticalMoveInput = Input.GetAxis("Vertical");
+            _horizontalMoveInput = Input.GetAxis("Horizontal");
+            _verticalMoveInput = Input.GetAxis("Vertical");
 
             if (Input.GetButtonDown("Fire1"))
             {
@@ -42,7 +42,7 @@ namespace Asteroids
 
             var mousePosition = Input.mousePosition;
 
-            gameController.CheckInputResult(verticalMoveInput, horizontalMoveInput, IsChangeAcceleretion, isShooting, mousePosition);
+            _gameController.CheckInputResult(_verticalMoveInput, _horizontalMoveInput, IsChangeAcceleretion, isShooting, mousePosition);
 
         }
 
