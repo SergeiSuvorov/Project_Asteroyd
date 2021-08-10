@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IWeapon 
 {
-    void Instance(Transform barrel, GameObject ammo, float shootStartForce);
+    void Instantiate(Transform barrel, GameObject ammo, float shootStartForce);
     void Shoot(Vector3 direction);
 
 }

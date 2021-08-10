@@ -13,7 +13,7 @@ public class WeaponController
         var force = weaponData.Force;
         ChoseWeaponType();
         _barrelTransform = barrelTransform;
-        _weapon.Instance(barrelTransform, bulletGameObject, force);
+        _weapon.Instantiate(barrelTransform, bulletGameObject, force);
     }
 
     /// <summary>
@@ -25,7 +25,6 @@ public class WeaponController
         if (_weaponModel.WeaponType == WeaponType.Gun)
         {
             _weapon = new Gun();
-          
         }
         if (_weaponModel.WeaponType == WeaponType.TwinGun)
         {
