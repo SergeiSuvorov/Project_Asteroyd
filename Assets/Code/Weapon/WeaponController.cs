@@ -25,7 +25,6 @@ public class WeaponController
         if (_weaponModel.WeaponType == WeaponType.Gun)
         {
             _weapon = new Gun();
-          
         }
         if (_weaponModel.WeaponType == WeaponType.TwinGun)
         {

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Asteroids.ServiceLocator;
 
 
 namespace Asteroids
@@ -20,6 +21,22 @@ namespace Asteroids
             _shipController = new ShipController(shipGameObject, shipData);
             _weaponController = new WeaponController(weaponData, bulletGameObject,barrelTransform);
             _playerGameObject = shipGameObject;
+
+
+            ///Использование ServiceLocator
+            int ammoCount =0;
+            if(ServiceLocator.ServiceLocator.Resolve<ObjectPool.ObjectPool>() != null)
+            {
+                ammoCount = ServiceLocator.ServiceLocator.Resolve<ObjectPool.ObjectPool>().CreateObjectIndex;
+                
+            }
+            if (ServiceLocator.ServiceLocator.Resolve<TypePool<BulletController>>() != null)
+            {
+                ammoCount = ServiceLocator.ServiceLocator.Resolve<TypePool<BulletController>>().PoolCount;
+            }
+
+            Debug.Log($"There are {ammoCount + 1} bullet in pool");
+
         }
 
         /// <summary>

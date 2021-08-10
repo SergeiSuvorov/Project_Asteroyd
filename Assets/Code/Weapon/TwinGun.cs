@@ -9,16 +9,14 @@ public class TwinGun : BallisticWeapon, IWeapon
 
     public void Shoot(Vector3 direction)
     {
-        var bullet = ShootFromBarrel(_firstBarrelTransform);
-        bullet.Shooting(direction, _force);
-
-        bullet = ShootFromBarrel(_secondBarrelTransform);
-        bullet.Shooting(direction, _force);
+        ShootFromBarrel(_firstBarrelTransform, direction);
+        ShootFromBarrel(_secondBarrelTransform, direction);
     }
 
     public void Instantiate(Transform barrel, GameObject ammo, float shootStartForce)
     {
-        CreateBulletPool(ammo);
+        CreateTypePoolWhithBuilder();
+
         _force = shootStartForce;
         Vector3 firstBarrelPosition = new Vector3(barrel.position.x - 0.5f, barrel.position.y );
         Vector3 secondBarrelPosition = new Vector3(barrel.position.x + 0.5f , barrel.position.y );

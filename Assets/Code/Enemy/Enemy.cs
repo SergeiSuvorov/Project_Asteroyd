@@ -6,6 +6,7 @@ using System;
 
 namespace Asteroids
 {
+    [Serializable]
     public abstract class Enemy : MonoBehaviour, IHealth
     {
         public static IEnemyFactory Factory;

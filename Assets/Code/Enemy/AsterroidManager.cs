@@ -2,59 +2,70 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Asteroids.Prototype;
 
 
 public class AsterroidManager : IExecute
 {
-    private GameObject _asterroidPrefab;
-    private ObjectPool.ObjectPool _asterroidPool;
-    private List<Enemy> _asterroids =new List<Enemy>();
+    private GameObject _asterroidPrototype;
+    private List<AsterroidController> _asterroidControllersPool = new List<AsterroidController>();
+    private TypePool<AsterroidController> _typePool;
+    private List<AsterroidController> _asterroids =new List<AsterroidController>();
+    private AsterroidController _asterroidControllerPrototype;
     public bool IsActive { get; private set; }
 
     public  AsterroidManager ()
     {
-        _asterroidPrefab = Resources.Load<GameObject>("Enemy/Asteroid");
-        _asterroidPool = new ObjectPool.ObjectPool(_asterroidPrefab);
+       var asterroidDataPrototype = Resources.Load<AsterroidData>("Entities/Enemy/Asterroid");
+        _asterroidPrototype = asterroidDataPrototype.EnemyGameObject;
+        _asterroidControllerPrototype = new AsterroidController(_asterroidPrototype, asterroidDataPrototype.Health);
+        _typePool = new TypePool<AsterroidController>(_asterroidControllerPrototype);
 
-        for (int i = 0; i < 40; i++)
+        for (int i = 0; i < 5; i++)
         {
-            var asterroid = Enemy.CreateAsteroidEnemyWithPool(_asterroidPool, new Health(10, 10));
-            asterroid.IsDestroy += onEnemyDestroy;
-            _asterroids.Add(asterroid);
-
-            asterroid.SetRandomStartPosition(-8, +8, 6 + i, 15 + i);
+            AsterroidController asterroidController = CreateAsterroidFromTypePool();
+            asterroidController.SetRandomStartPosition(-8, +8, 6 + i, 15 + i);
         }
 
         IsActive = true;
     }
-   
-    void onEnemyDestroy(Enemy asterroid)
-    {
-        asterroid.IsDestroy += null;
-        _asterroids.Remove(asterroid);
-        _asterroidPool.ReturnToPool(asterroid.gameObject);
-    }
-
+  
     public void Execute()
     {
         for (int i = 0; i < _asterroids.Count; i++)
         {
-            if (_asterroids[i].transform.position.y < -5)
-                onEnemyDestroy(_asterroids[i]);
+            if (_asterroids[i].EnemyGameObject.transform.position.y < -5)
+            {
+                onAsteroidDestroy(_asterroids[i]);
+            }
         }
 
-        if (_asterroids.Count < 25)
+        if (_asterroids.Count < 2)
         {
             var asterroidCreateCount = 0;
-            while (_asterroids.Count < 40)
+            while (_asterroids.Count < 5)
             {
-                var asterroid = Enemy.CreateAsteroidEnemyWithPool(_asterroidPool, new Health(100, 100));
-                asterroid.IsDestroy += onEnemyDestroy;
-                _asterroids.Add(asterroid);
-
-                asterroid.SetRandomStartPosition(-8, +8, 6 + asterroidCreateCount, 20 + asterroidCreateCount);
+                var asterroidController = CreateAsterroidFromTypePool();
+                asterroidController.SetRandomStartPosition(-8, +8, 10 + asterroidCreateCount, 25 + asterroidCreateCount);
                 asterroidCreateCount++;
             }
         }
+    }
+
+    void onAsteroidDestroy(AsterroidController asterroid)
+    {
+        asterroid.IsDestroy += null;
+        _asterroids.Remove(asterroid);
+        _typePool.ReturnToPool(asterroid);
+    }
+
+    public AsterroidController CreateAsterroidFromTypePool()
+    {
+        
+        AsterroidController asterroidController = _typePool.GetFromPool();
+
+        asterroidController.IsDestroy += onAsteroidDestroy;
+        _asterroids.Add(asterroidController);
+        return asterroidController;
     }
 }

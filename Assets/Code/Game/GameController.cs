@@ -24,11 +24,11 @@ namespace Asteroids
             _listExecuteObject = new ListExecuteObject();
 
             _playerController = new PlayerController( _bulletGameObject, _shipGameObject, _shipData, _barrel, _weaponData);
+
             _inputController = new InputController(this);
+            _listExecuteObject.AddExecuteObject(_inputController);
 
             _asterroidManager = new AsterroidManager();
-
-            _listExecuteObject.AddExecuteObject(_inputController);
             _listExecuteObject.AddExecuteObject(_asterroidManager);
 
             Execute execute = FindObjectOfType<Execute>();

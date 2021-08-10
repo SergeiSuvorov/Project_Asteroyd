@@ -14,7 +14,7 @@ public class Gun : BallisticWeapon, IWeapon
 
     public void Instantiate(Transform barrel, GameObject ammo, float shootStartForce)
     {
-        CreateBulletPool(ammo);
+        CreateObjectPoolWithBuilder();
         _barrel = barrel;
         _force = shootStartForce;
     }

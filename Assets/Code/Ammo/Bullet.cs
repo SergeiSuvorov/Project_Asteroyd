@@ -16,7 +16,11 @@ public class Bullet : MonoBehaviour, IExecute
 
     public bool IsActive { get; private set; }
 
-   
+    private void Awake()
+    {
+        _bulletRigidbody = GetComponent<Rigidbody2D>();
+        _damage = 50;
+    }
     public void Shooting(Vector2 direction, float shootStartForce)
     {
         _direction = direction;

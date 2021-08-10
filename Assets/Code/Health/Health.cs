@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Asteroids
 {
+    [Serializable]
     public sealed class Health
     {
 
@@ -28,5 +30,10 @@ namespace Asteroids
         {
             Current += healthAid;
         }
-}
+
+        public override string ToString()
+        {
+            return $"MaxHP {Max} CurrentHP {Current}";
+        }
+    }
 }
