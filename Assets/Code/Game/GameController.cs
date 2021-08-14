@@ -13,22 +13,16 @@ namespace Asteroids
         [SerializeField] private Transform _barrel;
         [SerializeField] private WeaponData _weaponData;
 
-        private PlayerController playerController;
-        private ListExecuteObject listExecuteObject;
-        private InputController inputController;
-
+        private PlayerController _playerController;
+        private ListExecuteObject _listExecuteObject;
+        private Input _inputController;
+        private AsterroidManager _asterroidManager;
+        public ListExecuteObject ListExecuteObject { get { return _listExecuteObject; } }
         public Transform PlayerTransform => _shipGameObject.transform;
-        private void Awake()
+        void Awake()
         {
-            playerController = new PlayerController( _bulletGameObject, _shipGameObject, _shipData, _barrel, _weaponData);
-            inputController = new InputController(this);
-
-            listExecuteObject = new ListExecuteObject();
-            listExecuteObject.AddExecuteObject(inputController);
-
-            Execute execute = FindObjectOfType<Execute>();
-            execute.SetListtExecuteObject(listExecuteObject);
-
+            GameStarter gameStarter = new GameStarter();
+            gameStarter.CreateGame(_bulletGameObject, _shipGameObject, _shipData, _barrel, _weaponData, this, out _playerController, out _listExecuteObject, out _inputController, out _asterroidManager);
         }
 
         
@@ -44,18 +38,18 @@ namespace Asteroids
         public void CheckInputResult(float verticalMove, float horizontalMove, bool IsChangeAcceleretion, bool IsShooting, Vector3 mousePosition)
         {
             if (horizontalMove != 0 || verticalMove != 0)
-                playerController.Move(horizontalMove, verticalMove, IsChangeAcceleretion);
+                _playerController.Move(horizontalMove, verticalMove, IsChangeAcceleretion);
 
             if (IsShooting)
             {
-                playerController.Shooting();
+                _playerController.Shooting();
             }
             if (IsChangeAcceleretion)
             {
-                playerController.ChangeAcceleretionMode();
+                _playerController.ChangeAcceleretionMode();
             }
 
-            playerController.Rotation(mousePosition);
+            _playerController.Rotation(mousePosition);
         }
     }
 }

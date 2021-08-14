@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Asteroids;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,35 +8,34 @@ public class ShipModel: IHealth
 {
     private float _engineForce;
     private float _acceleration;
-    private float _healthPoint;
+    private Health _health;
 
     public float EngineForce => _engineForce;
     public float Acceleration => _acceleration;
-    public float HealthPoint => _healthPoint;
+    public Health HealthPoint => _health;
 
-    Action ShipDestroy;
+    public Action ShipDestroy;
 
     public ShipModel(ShipData shipData)
     {
         _engineForce = shipData.Speed;
         _acceleration = shipData.Acceleration;
-        _healthPoint = shipData.HealthPoint;
+        _health = new Health( shipData.HealthPoint, shipData.HealthPoint);
     }
 
-    public void GetDamage()
+    public void GetDamage(float damage)
     {
-        if (_healthPoint <= 0)
+        _health.Damage(damage);
+       
+        if (_health.Current <= 0)
         {
             ShipDestroy?.Invoke(); 
         }
-        else
-        {
-            _healthPoint--;
-        }
+        
     }
 
-    public void SetHealth(float healthAid)
+    public void SetHealthAid(float healthAid)
     {
-        _healthPoint += healthAid;
+        _health.SetHealthAid(healthAid);
     }
 }

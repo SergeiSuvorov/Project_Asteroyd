@@ -4,24 +4,53 @@ using UnityEngine;
 
 namespace Asteroids
 {
-    internal sealed class ShipController : IMove, IRotation
+    internal sealed class ShipController : IMove, IRotation, IHealth
     {
         private readonly IMove _moveImplementation;
         private readonly IRotation _rotationImplementation;
         private readonly ShipModel _shipModel;
+        private readonly ShipView _shipView;
         public float EngineForce => _moveImplementation.EngineForce;
 
 
         public ShipController(GameObject shipGameObject, ShipData shipData)
         {
             _shipModel = new ShipModel(shipData);
+            _shipModel.ShipDestroy += ShipDestroy;
+
+            _shipView = shipGameObject.GetComponent<ShipView>();
+            _shipView.GetHealth += SetHealthAid;
+            _shipView.GetDamage += GetDamage;
+
             var engineForce = _shipModel.EngineForce;
             var acceleration = _shipModel.Acceleration;
-            _moveImplementation = new MoveForce(shipGameObject.transform, engineForce);
-            //_moveImplementation = new AccelerationMove(shipGameObject.transform, engineForce, acceleration);
-            _rotationImplementation = new RotationShip(shipGameObject.transform);
+
+            _moveImplementation = ChoseMoveType(shipData);
+
+            //_moveImplementation = new MoveForce(shipGameObject.transform, engineForce);
+            //_rotationImplementation = new RotationShip(shipGameObject.transform);
         }
 
+        private IMove ChoseMoveType(ShipData shipData)
+        {
+            IMove move;
+            switch (shipData.MovingType)
+            {
+                case MovingType.MoveTransform:
+                    move = new MoveTransform(_shipView.gameObject.transform, _shipModel.EngineForce);
+                    break;
+                case MovingType.MoveForce:
+                    move = new MoveForce(_shipView.gameObject.transform, _shipModel.EngineForce);
+                    break;
+                case MovingType.AcselerationMove:
+                    move = new AccelerationMove(_shipView.gameObject.transform, _shipModel.EngineForce, _shipModel.Acceleration);
+                    break;
+                default:
+                    move = new MoveTransform(_shipView.gameObject.transform, _shipModel.EngineForce);
+                    break;
+            }
+            return move;
+        }
         /// <summary>
         /// Метод осуществляющий движение корабля
         /// </summary>
@@ -35,7 +64,10 @@ namespace Asteroids
         /// </summary>
         public void Rotation(Vector3 direction)
         {
-            _rotationImplementation.Rotation(direction);
+            if (_rotationImplementation != null)
+            {
+                _rotationImplementation.Rotation(direction);
+            }
         }
 
         /// <summary>
@@ -49,6 +81,20 @@ namespace Asteroids
             }
         }
 
+        public void GetDamage(float damage)
+        {
+            _shipModel.GetDamage(damage);
+        }
+
+        public void SetHealthAid(float healthAid)
+        {
+            _shipModel.SetHealthAid(healthAid);
+        }
+
+        public void ShipDestroy()
+        {
+            Debug.Log("уничтожен");
+        }
     }
 }
 
