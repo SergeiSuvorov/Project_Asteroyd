@@ -8,13 +8,12 @@ public class Gun : BallisticWeapon, IWeapon
 
     public void Shoot(Vector3 direction)
     {
-        var bullet = ShootFromBarrel(_barrel);
-        bullet.Shooting(direction, _force);
+        ShootFromBarrel(_barrel, direction);
     }
 
     public void Instantiate(Transform barrel, GameObject ammo, float shootStartForce)
     {
-        CreateObjectPoolWithBuilder();
+        CreateBulletTypePoolWhithBuilder();
         _barrel = barrel;
         _force = shootStartForce;
     }

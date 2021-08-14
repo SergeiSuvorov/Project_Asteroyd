@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Asteroids
 {
     [CreateAssetMenu(fileName = "NewAsterroid", menuName = "Data/Enemy")]
-    public class AsterroidData : ScriptableObject,IEnemyData
+    public class AsterroidData : ScriptableObject
     {
 
         [SerializeField] private GameObject _enemyGameObject;
@@ -14,10 +14,7 @@ namespace Asteroids
         [SerializeField] private  float _health;
         public Health Health => CreateRandomHealth();
 
-        public IEnemyData GetEnemyData()
-        {
-        return this;
-        }
+       
 
         private Health CreateRandomHealth()
         {

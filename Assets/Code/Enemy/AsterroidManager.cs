@@ -24,7 +24,7 @@ public class AsterroidManager : IExecute
         for (int i = 0; i < 5; i++)
         {
             AsterroidController asterroidController = CreateAsterroidFromTypePool();
-            asterroidController.SetRandomStartPosition(-8, +8, 6 + i, 15 + i);
+            asterroidController.SetRandomStartPosition(-8, +8, 6 + i, 15 + i);// числа в параметрах ограничивают выход астерройдов за пределы области отображаемой экраном
         }
 
         IsActive = true;
@@ -34,7 +34,7 @@ public class AsterroidManager : IExecute
     {
         for (int i = 0; i < _asterroids.Count; i++)
         {
-            if (_asterroids[i].EnemyGameObject.transform.position.y < -5)
+            if (_asterroids[i].EnemyGameObject.transform.position.y < -5)// -5 - выход астерройдов за пределы области отображаемой экраном
             {
                 onAsteroidDestroy(_asterroids[i]);
             }
@@ -46,7 +46,7 @@ public class AsterroidManager : IExecute
             while (_asterroids.Count < 5)
             {
                 var asterroidController = CreateAsterroidFromTypePool();
-                asterroidController.SetRandomStartPosition(-8, +8, 10 + asterroidCreateCount, 25 + asterroidCreateCount);
+                asterroidController.SetRandomStartPosition(-8, +8, 10 + asterroidCreateCount, 25 + asterroidCreateCount);// числа в параметрах ограничивают выход астерройдов за пределы области отображаемой экраном
                 asterroidCreateCount++;
             }
         }

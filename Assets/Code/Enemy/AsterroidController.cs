@@ -15,13 +15,7 @@ namespace Asteroids
         public Action < AsterroidController > IsDestroy;
         
 
-        public AsterroidController(IEnemyData enemyData) : base(enemyData)
-        {
-            _poolGameObject = new GameObject();
-            _poolGameObject.name = "Asterroid Pool";
-
-            UpdateAsterroidView();
-        }
+       
         public AsterroidController(GameObject gameObject, Health health) : base(gameObject, health)
         {
             _poolGameObject = new GameObject();

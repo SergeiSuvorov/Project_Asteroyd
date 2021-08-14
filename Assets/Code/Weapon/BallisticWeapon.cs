@@ -32,41 +32,13 @@ public abstract class BallisticWeapon
         }
     }
 
-    /// <summary>
-    /// Ильзуется для создания ObjectPoolа на основе GameObjecta сделанного с помощью строителя
-    /// </summary>
-    /// <param name="bulletPrefab"></param>
-    protected void CreateObjectPoolWithBuilder()
-    {
-
-        var bulletSprite = Resources.Load<Sprite>("Sprite/Bullet");
-        var bulletGameOject = new GameObject().SetName("Bullet")
-                                           .AddSprite(bulletSprite)
-                                           .AddRigidbody2D(1)
-                                           .AddCircleCollider2D()
-                                           .GetOrAddComponent<Bullet>().gameObject;
-
-        _bulletPool = new ObjectPool.ObjectPool(bulletGameOject);
-        // Передаем пул в сервис локатор
-        ServiceLocator.SetService(_bulletPool);
-
-        List<GameObject> bullets = new List<GameObject>();
-        for (int i = 0; i < 12; i++)
-        {
-            var bullet = _bulletPool.GetFromPool();
-            bullets.Add(bullet);
-        }
-        for (int i = 0; i < 12; i++)
-        {
-            _bulletPool.ReturnToPool(bullets[i]);
-        }
-    }
+    
 
     /// <summary>
     /// Ильзуется для создания TypePool на основе GameObjecta сделанного с помощью строителя
     /// </summary>
     /// <param name="bulletGameOject"></param>
-    protected void CreateTypePoolWhithBuilder()
+    protected void CreateBulletTypePoolWhithBuilder()
     {
         var bulletSprite = Resources.Load<Sprite>("Sprite/Bullet");
         var bulletGameOject = new GameObject().SetName("Bullet")
@@ -94,20 +66,6 @@ public abstract class BallisticWeapon
         }
     }
 
-    /// <summary>
-    /// Метод передающий Bulet координаты точки спауна пули, использует ObjectPool
-    /// </summary>
-    /// <param name="_barrel"></param>
-    /// <returns></returns>
-    protected Bullet ShootFromBarrel(Transform _barrel)
-    {
-        var bulletGameObject = _bulletPool.GetFromPool();
-        bulletGameObject.transform.position = _barrel.position;
-        bulletGameObject.transform.rotation = _barrel.rotation;
-        var bullet = bulletGameObject.GetComponent<Bullet>();
-        bullet.LifeTimeIsEnd += ReturnBulletToPool;
-        return bullet;
-    }
 
     /// <summary>
     /// Метод вызывающий BuletController из пула и передающий команду на выстрел, использует TypePool
@@ -118,15 +76,7 @@ public abstract class BallisticWeapon
         bulletController.Shooting(barrel,direction,_force);
     }
 
-    /// <summary>
-    /// Возвращает пулю в ObjectPool
-    /// </summary>
-    /// <param name="bullet"></param>
-    protected void ReturnBulletToPool(Bullet bullet)
-    {
-        bullet.LifeTimeIsEnd += null;
-        _bulletPool.ReturnToPool(bullet.gameObject);
-    }
+    
 
     /// <summary>
     /// Возвращает пулю в TypePool

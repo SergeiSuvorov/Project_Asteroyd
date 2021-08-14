@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Asteroids.Proxy.ProxyProtection;
 
 public class WeaponController
 {
@@ -30,6 +31,8 @@ public class WeaponController
         {
             _weapon = new TwinGun();
         }
+
+        _weapon = new WeaponProxy(_weapon);
     }
 
     /// <summary>

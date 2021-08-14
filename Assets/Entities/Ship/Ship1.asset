@@ -15,3 +15,4 @@ MonoBehaviour:
   _speed: 5
   _acceleration: 7
   _healthPoint: 150
+  movingType: 0

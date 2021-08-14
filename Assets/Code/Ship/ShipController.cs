@@ -24,13 +24,33 @@ namespace Asteroids
 
             var engineForce = _shipModel.EngineForce;
             var acceleration = _shipModel.Acceleration;
-            
-            _moveImplementation = new AccelerationMove(shipGameObject.transform, engineForce, acceleration);
+
+            _moveImplementation = ChoseMoveType(shipData);
 
             //_moveImplementation = new MoveForce(shipGameObject.transform, engineForce);
             //_rotationImplementation = new RotationShip(shipGameObject.transform);
         }
 
+        private IMove ChoseMoveType(ShipData shipData)
+        {
+            IMove move;
+            switch (shipData.MovingType)
+            {
+                case MovingType.MoveTransform:
+                    move = new MoveTransform(_shipView.gameObject.transform, _shipModel.EngineForce);
+                    break;
+                case MovingType.MoveForce:
+                    move = new MoveForce(_shipView.gameObject.transform, _shipModel.EngineForce);
+                    break;
+                case MovingType.AcselerationMove:
+                    move = new AccelerationMove(_shipView.gameObject.transform, _shipModel.EngineForce, _shipModel.Acceleration);
+                    break;
+                default:
+                    move = new MoveTransform(_shipView.gameObject.transform, _shipModel.EngineForce);
+                    break;
+            }
+            return move;
+        }
         /// <summary>
         /// Метод осуществляющий движение корабля
         /// </summary>

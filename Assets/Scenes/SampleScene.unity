@@ -188,7 +188,7 @@ MonoBehaviour:
   _playerGameObject: {fileID: 241713500}
   _shipData: {fileID: 11400000, guid: dc4f31c66e661a449b74b9abe7324dd4, type: 2}
   _barrel: {fileID: 977317877}
-  _weaponData: {fileID: 11400000, guid: fc6f05765522ea34d86700c304f43014, type: 2}
+  _weaponData: {fileID: 11400000, guid: 0b7580830d15c8f4ba679a1d47e73396, type: 2}
 --- !u!4 &384937270
 Transform:
   m_ObjectHideFlags: 0

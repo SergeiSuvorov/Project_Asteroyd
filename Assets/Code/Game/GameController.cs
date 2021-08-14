@@ -15,24 +15,14 @@ namespace Asteroids
 
         private PlayerController _playerController;
         private ListExecuteObject _listExecuteObject;
-        private InputController _inputController;
+        private Input _inputController;
         private AsterroidManager _asterroidManager;
         public ListExecuteObject ListExecuteObject { get { return _listExecuteObject; } }
         public Transform PlayerTransform => _shipGameObject.transform;
         void Awake()
         {
-            _listExecuteObject = new ListExecuteObject();
-
-            _playerController = new PlayerController( _bulletGameObject, _shipGameObject, _shipData, _barrel, _weaponData);
-
-            _inputController = new InputController(this);
-            _listExecuteObject.AddExecuteObject(_inputController);
-
-            _asterroidManager = new AsterroidManager();
-            _listExecuteObject.AddExecuteObject(_asterroidManager);
-
-            Execute execute = FindObjectOfType<Execute>();
-            execute.SetListtExecuteObject(_listExecuteObject);
+            GameStarter gameStarter = new GameStarter();
+            gameStarter.CreateGame(_bulletGameObject, _shipGameObject, _shipData, _barrel, _weaponData, this, out _playerController, out _listExecuteObject, out _inputController, out _asterroidManager);
         }
 
         

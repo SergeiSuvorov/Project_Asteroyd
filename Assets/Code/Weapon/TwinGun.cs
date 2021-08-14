@@ -15,7 +15,7 @@ public class TwinGun : BallisticWeapon, IWeapon
 
     public void Instantiate(Transform barrel, GameObject ammo, float shootStartForce)
     {
-        CreateTypePoolWhithBuilder();
+        CreateBulletTypePoolWhithBuilder();
 
         _force = shootStartForce;
         Vector3 firstBarrelPosition = new Vector3(barrel.position.x - 0.5f, barrel.position.y );
