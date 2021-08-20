@@ -5,15 +5,27 @@ using UnityEngine;
 
 public class ShipView : MonoBehaviour, IHealth
 {
-    public Action<float> GetDamage;
-    public Action<float> GetHealth;
-    void IHealth.GetDamage(float damage)
+    private float _collisionDamage=500; 
+    public Action<float> GettingDamage;
+    public Action<float> GettingHealth;
+
+    
+    public void GetDamage(float damage)
     {
-        GetDamage?.Invoke(damage);
+        GettingDamage?.Invoke(damage);
     }
 
-    void IHealth.SetHealthAid(float healthAid)
+    public void SetHealthAid(float healthAid)
     {
-        GetHealth?.Invoke(healthAid);
+        GettingHealth?.Invoke(healthAid);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.GetComponent<IHealth>() != null)
+            collision.gameObject.GetComponent<IHealth>().GetDamage(_collisionDamage);
+
+
+        Debug.Log(gameObject.name);
     }
 }

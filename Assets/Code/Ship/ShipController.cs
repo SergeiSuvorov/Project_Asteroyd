@@ -1,26 +1,27 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Asteroids
 {
-    internal sealed class ShipController : IMove, IRotation, IHealth
+    public class ShipController : IMove, IRotation, IHealth
     {
         private readonly IMove _moveImplementation;
         private readonly IRotation _rotationImplementation;
         private readonly ShipModel _shipModel;
         private readonly ShipView _shipView;
         public float EngineForce => _moveImplementation.EngineForce;
-
+        public Action ShipDestroy; 
 
         public ShipController(GameObject shipGameObject, ShipData shipData)
         {
             _shipModel = new ShipModel(shipData);
-            _shipModel.ShipDestroy += ShipDestroy;
+            _shipModel.ShipDestroy += OnShipDestroy;
 
             _shipView = shipGameObject.GetComponent<ShipView>();
-            _shipView.GetHealth += SetHealthAid;
-            _shipView.GetDamage += GetDamage;
+            _shipView.GettingHealth += SetHealthAid;
+            _shipView.GettingDamage += GetDamage;
 
             var engineForce = _shipModel.EngineForce;
             var acceleration = _shipModel.Acceleration;
@@ -91,9 +92,20 @@ namespace Asteroids
             _shipModel.SetHealthAid(healthAid);
         }
 
-        public void ShipDestroy()
+        public void OnShipDestroy()
         {
-            Debug.Log("уничтожен");
+            ShipGameObjectSetActive(false);
+            ShipDestroy?.Invoke();            
+        }
+
+        protected void ShipGameObjectSetActive(bool isActive)
+        {
+            _shipView.gameObject.SetActive(isActive);
+        }
+
+        protected void ShipGameObjectSetPosition(Vector2 position)
+        {
+            _shipView.transform.localPosition = position;
         }
     }
 }

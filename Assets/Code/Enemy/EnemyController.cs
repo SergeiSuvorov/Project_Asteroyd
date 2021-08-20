@@ -15,7 +15,7 @@ namespace Asteroids
         public GameObject EnemyGameObject => _enemyGameObject;
 
 
-        public Health Health
+        [SerializeField] public Health Health
         {
             get
             {

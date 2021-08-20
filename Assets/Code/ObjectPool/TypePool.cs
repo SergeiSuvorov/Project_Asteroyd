@@ -15,11 +15,17 @@ public class TypePool<T>
     public TypePool(T prefab)
     {
          _prototype = prefab;
-      
+
+
         if (_prototype is IExecute)
         {
             _listExecuteObject = UnityEngine.Object.FindObjectOfType<GameController>().ListExecuteObject;
             _listExecuteObject.AddExecuteObject(_prototype as IExecute);
+        }
+
+        if (prefab is ITypePoolObject)
+        {
+            (prefab as ITypePoolObject).ExecuteAfterGetToPool();
         }
     }
 
@@ -34,6 +40,10 @@ public class TypePool<T>
             _objectList.Add(typeObject);
     }
 
+    public bool CheckToContainsInPool(T typeObject)
+    {
+        return _objectList.Contains(typeObject);
+    }
     public T GetFromPool() 
     {
         T typeObject;

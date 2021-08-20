@@ -40,7 +40,8 @@ namespace Asteroids
             if (collision.gameObject.GetComponent<IHealth>() != null)
                 collision.gameObject.GetComponent<IHealth>().GetDamage(_damage);
 
-            //Debug.Log(collision.gameObject.name);
+            
+            Debug.Log(gameObject.name);
         }
 
         public void GetDamage(float damage)

@@ -7,8 +7,8 @@ namespace Asteroids
     public sealed class Health
     {
 
-        public float Max { get; }
-        public float Current { get; private set; }
+        [SerializeField]public float Max { get; }
+        [SerializeField] public float Current { get; private set; }
         
         public Health(float max, float current)
         {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Asteroids.ServiceLocator;
-
+using System;
 
 namespace Asteroids
 {
@@ -10,15 +10,17 @@ namespace Asteroids
     {
        
         private Camera _camera;
-        private ShipController _shipController;
+        private ShipGameComandController _shipController;
         private WeaponController _weaponController;
         private ShipData _shipData;
         private GameObject _playerGameObject;
-       
+
+        public Action ShipDestroy;
         public PlayerController( GameObject bulletGameObject, GameObject shipGameObject, ShipData shipData, Transform barrelTransform,WeaponData weaponData)
         {
             _camera = Camera.main;
-            _shipController = new ShipController(shipGameObject, shipData);
+            _shipController = new ShipGameComandController(shipGameObject, shipData);
+            _shipController.ShipDestroy += OnShipDestroy;
             _weaponController = new WeaponController(weaponData, bulletGameObject,barrelTransform);
             _playerGameObject = shipGameObject;
 
@@ -38,7 +40,11 @@ namespace Asteroids
             Debug.Log($"There are {ammoCount + 1} bullet in pool");
 
         }
-
+        public void OnShipDestroy()
+        {
+            Debug.Log("уничтожен PC");
+            ShipDestroy?.Invoke();
+        }
         /// <summary>
         /// Метод осуществляющий перемещение корабля передает в  ShipController перемещение по осям 
         /// </summary>
@@ -70,6 +76,11 @@ namespace Asteroids
         public void Shooting()
         {
             _weaponController.Shoot(_playerGameObject.transform.position);
+        }
+
+        public void OnRestartGame()
+        {
+            _shipController.OnRestartGame();
         }
         
     }
