@@ -1,19 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Asteroids.Proxy.ProxyProtection;
 
 public class WeaponController
 {
     private IWeapon _weapon;
     private WeaponModel _weaponModel;
     private Transform _barrelTransform;
-    public WeaponController(WeaponData weaponData, GameObject bulletGameObject, Transform barrelTransform)
+
+    public WeaponController(WeaponData weaponData, Transform barrelTransform)
     {
         _weaponModel = new WeaponModel(weaponData);
         var force = weaponData.Force;
         ChoseWeaponType();
         _barrelTransform = barrelTransform;
-        _weapon.Instance(barrelTransform, bulletGameObject, force);
+        _weapon.Instantiate(barrelTransform, weaponData.AmmoData, force);
     }
 
     /// <summary>
@@ -25,12 +27,13 @@ public class WeaponController
         if (_weaponModel.WeaponType == WeaponType.Gun)
         {
             _weapon = new Gun();
-          
         }
         if (_weaponModel.WeaponType == WeaponType.TwinGun)
         {
             _weapon = new TwinGun();
         }
+
+        _weapon = new WeaponProxy(_weapon);
     }
 
     /// <summary>

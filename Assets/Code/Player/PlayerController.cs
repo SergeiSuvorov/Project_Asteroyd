@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Asteroids.ServiceLocator;
+using System;
 
 namespace Asteroids
 {
@@ -9,19 +10,26 @@ namespace Asteroids
     {
        
         private Camera _camera;
-        private ShipController _shipController;
-        private WeaponController _weaponController;
+        private ShipGameComandController _shipController;
+        //private WeaponController _weaponController;
         private ShipData _shipData;
         private GameObject _playerGameObject;
-       
-        public PlayerController( GameObject bulletGameObject, GameObject shipGameObject, ShipData shipData, Transform barrelTransform,WeaponData weaponData)
+
+        public Action ShipDestroy;
+        
+        public PlayerController(GameObject playerGameObject, ShipData shipData, WeaponData weaponData)
         {
             _camera = Camera.main;
-            _shipController = new ShipController(shipGameObject, shipData);
-            _weaponController = new WeaponController(weaponData, bulletGameObject,barrelTransform);
-            _playerGameObject = shipGameObject;
-        }
+        
+            _shipController = new ShipGameComandController(shipData, weaponData, playerGameObject.transform);
+            _shipController.ShipDestroy += OnShipDestroy;
 
+        }
+        public void OnShipDestroy()
+        {
+            Debug.Log("уничтожен PC");
+            ShipDestroy?.Invoke();
+        }
         /// <summary>
         /// Метод осуществляющий перемещение корабля передает в  ShipController перемещение по осям 
         /// </summary>
@@ -48,11 +56,18 @@ namespace Asteroids
         }
 
         /// <summary>
-        /// Метод передающий в WeaponController о необходимости выстрела
+        /// Метод передающий в ShipController о необходимости выстрела
         /// </summary>
         public void Shooting()
         {
-            _weaponController.Shoot(_playerGameObject.transform.position);
+            //_weaponController.Shoot(_playerGameObject.transform.position);
+            _shipController.Shooting();
+
+        }
+
+        public void OnRestartGame()
+        {
+            _shipController.OnRestartGame();
         }
         
     }

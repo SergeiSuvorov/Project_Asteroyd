@@ -9,5 +9,8 @@ public class WeaponData : ScriptableObject
     public float Force => _force;
     [SerializeField] private WeaponType _weaponType;
     public WeaponType WeaponType => _weaponType;
+
+    [SerializeField] private AmmoData _ammoData;
+    public AmmoData AmmoData => _ammoData;
 }
 public enum WeaponType : byte {Gun=0 , TwinGun=1};
