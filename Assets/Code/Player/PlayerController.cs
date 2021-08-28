@@ -11,33 +11,18 @@ namespace Asteroids
        
         private Camera _camera;
         private ShipGameComandController _shipController;
-        private WeaponController _weaponController;
+        //private WeaponController _weaponController;
         private ShipData _shipData;
         private GameObject _playerGameObject;
 
         public Action ShipDestroy;
-        public PlayerController( GameObject bulletGameObject, GameObject shipGameObject, ShipData shipData, Transform barrelTransform,WeaponData weaponData)
+        
+        public PlayerController(GameObject playerGameObject, ShipData shipData, WeaponData weaponData)
         {
             _camera = Camera.main;
-            _shipController = new ShipGameComandController(shipGameObject, shipData);
+        
+            _shipController = new ShipGameComandController(shipData, weaponData, playerGameObject.transform);
             _shipController.ShipDestroy += OnShipDestroy;
-            _weaponController = new WeaponController(weaponData, bulletGameObject,barrelTransform);
-            _playerGameObject = shipGameObject;
-
-
-            ///Использование ServiceLocator
-            int ammoCount =0;
-            if(ServiceLocator.ServiceLocator.Resolve<ObjectPool.ObjectPool>() != null)
-            {
-                ammoCount = ServiceLocator.ServiceLocator.Resolve<ObjectPool.ObjectPool>().CreateObjectIndex;
-                
-            }
-            if (ServiceLocator.ServiceLocator.Resolve<TypePool<BulletController>>() != null)
-            {
-                ammoCount = ServiceLocator.ServiceLocator.Resolve<TypePool<BulletController>>().PoolCount;
-            }
-
-            Debug.Log($"There are {ammoCount + 1} bullet in pool");
 
         }
         public void OnShipDestroy()
@@ -71,11 +56,13 @@ namespace Asteroids
         }
 
         /// <summary>
-        /// Метод передающий в WeaponController о необходимости выстрела
+        /// Метод передающий в ShipController о необходимости выстрела
         /// </summary>
         public void Shooting()
         {
-            _weaponController.Shoot(_playerGameObject.transform.position);
+            //_weaponController.Shoot(_playerGameObject.transform.position);
+            _shipController.Shooting();
+
         }
 
         public void OnRestartGame()

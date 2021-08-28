@@ -11,11 +11,14 @@ namespace Asteroids
         private readonly IRotation _rotationImplementation;
         private readonly ShipModel _shipModel;
         private readonly ShipView _shipView;
+        private readonly WeaponController _weaponController;
         public float EngineForce => _moveImplementation.EngineForce;
-        public Action ShipDestroy; 
+        public Action ShipDestroy;
 
-        public ShipController(GameObject shipGameObject, ShipData shipData)
+        public ShipController(ShipData shipData, WeaponData weaponData, Transform shipGameObjectParent)
         {
+            GameObject shipGameObject = UnityEngine.Object.Instantiate(shipData.ShipGO);
+
             _shipModel = new ShipModel(shipData);
             _shipModel.ShipDestroy += OnShipDestroy;
 
@@ -28,8 +31,20 @@ namespace Asteroids
 
             _moveImplementation = ChoseMoveType(shipData);
 
+            GameObject barrelGameObject = new GameObject("Weapon");
+            barrelGameObject.transform.parent = shipGameObject.transform;
+            barrelGameObject.transform.localPosition = shipData.WeaponLocalPosition;
+            _weaponController = new WeaponController(weaponData, barrelGameObject.transform);
+
+            SetParentToShipGameObject(shipGameObjectParent);
             //_moveImplementation = new MoveForce(shipGameObject.transform, engineForce);
             //_rotationImplementation = new RotationShip(shipGameObject.transform);
+        }
+
+        protected void SetParentToShipGameObject(Transform parent)
+        {
+            _shipView.gameObject.transform.parent = parent;
+            _shipView.gameObject.transform.localPosition = Vector3.zero;
         }
 
         private IMove ChoseMoveType(ShipData shipData)
@@ -45,6 +60,9 @@ namespace Asteroids
                     break;
                 case MovingType.AcselerationMove:
                     move = new AccelerationMove(_shipView.gameObject.transform, _shipModel.EngineForce, _shipModel.Acceleration);
+                    break;
+                case MovingType.StateTranformMove:
+                    move = new StateTranformMove(_shipView.gameObject.transform, _shipModel.EngineForce);
                     break;
                 default:
                     move = new MoveTransform(_shipView.gameObject.transform, _shipModel.EngineForce);
@@ -106,6 +124,11 @@ namespace Asteroids
         protected void ShipGameObjectSetPosition(Vector2 position)
         {
             _shipView.transform.localPosition = position;
+        }
+
+        public void Shooting()
+        {
+            _weaponController.Shoot(_shipView.gameObject.transform.position);
         }
     }
 }

@@ -23,7 +23,6 @@ namespace Asteroids.Chain_of_Responsibility
         {
             _enemy.EnemyCount = _enemyCount;
             CoroutineExtensions.StartCoroutine(WaitingEnemyDeath(), out _);
-            Debug.Log("Handle");
         }
 
     }

@@ -9,10 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46499736b29abdb4d9b68e80a8753778, type: 3}
-  m_Name: Ship1
+  m_Script: {fileID: 11500000, guid: 1595dd164130fc24cb885ccdb0a73394, type: 3}
+  m_Name: Bullet
   m_EditorClassIdentifier: 
-  _speed: 5
-  _acceleration: 7
-  _healthPoint: 10
-  movingType: 0
+  _damage: 50
+  _ammoGO: {fileID: 1184363474555545781, guid: 0eae1a00fd0c25243be251ca9dd50ab0, type: 3}

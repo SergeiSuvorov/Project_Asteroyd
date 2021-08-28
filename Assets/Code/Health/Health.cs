@@ -7,12 +7,13 @@ namespace Asteroids
     public sealed class Health
     {
 
-        [SerializeField]public float Max { get; }
+        [SerializeField]public float Max { get { return _max; } }
+        [SerializeField] private float _max;
         [SerializeField] public float Current { get; private set; }
         
         public Health(float max, float current)
         {
-            Max = max;
+            _max = max;
             Current = current;
         }
 
@@ -33,7 +34,7 @@ namespace Asteroids
 
         public override string ToString()
         {
-            return $"MaxHP {Max} CurrentHP {Current}";
+            return $"MaxHP {_max} CurrentHP {Current}";
         }
     }
 }

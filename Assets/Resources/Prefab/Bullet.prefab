@@ -11,15 +11,15 @@ GameObject:
   - component: {fileID: 7101920021928955994}
   - component: {fileID: 1112184159423616449}
   - component: {fileID: 270804020586975693}
-  - component: {fileID: 8337434752847651791}
   - component: {fileID: 135397728702456182}
+  - component: {fileID: 3902641109430934836}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7101920021928955994
 Transform:
   m_ObjectHideFlags: 0
@@ -27,8 +27,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1184363474555545781}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.67, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -8.872839, y: -2.7, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -105,20 +105,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &8337434752847651791
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1184363474555545781}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0928a878c355e543834cd5c819ec8c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _bulletRigidbody: {fileID: 270804020586975693}
-  _damage: 50
 --- !u!58 &135397728702456182
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -135,3 +121,17 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &3902641109430934836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184363474555545781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38b3b02b81a904c4e9da5f2d821047d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bulletRigidbody: {fileID: 270804020586975693}
+  _damage: 50

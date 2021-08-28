@@ -8,21 +8,13 @@ namespace Asteroids
     [Serializable]
     public class AsterroidView : MonoBehaviour,IHealth
     {
-        [SerializeField] private Rigidbody2D _rigidbody;
-        //private GameObject _asteroidGameObject;
-        [SerializeField] private float _damage = 50;
+        private Rigidbody2D _rigidbody;
         public Action<float> GettingDamage;
+        public Action<GameObject> InCollision;
         void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
             _rigidbody.velocity = Vector2.down;
-        }
-     
-        public AsterroidView (float damage)
-        {
-            if (GetComponent<Rigidbody2D>()!=null)
-            _rigidbody = GetComponent<Rigidbody2D>();
-            _damage = damage;
         }
 
         private void OnEnable()
@@ -37,16 +29,12 @@ namespace Asteroids
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.gameObject.GetComponent<IHealth>() != null)
-                collision.gameObject.GetComponent<IHealth>().GetDamage(_damage);
-
-            
-            Debug.Log(gameObject.name);
+            Debug.Log(collision.gameObject);
+            InCollision?.Invoke(collision.gameObject);
         }
 
         public void GetDamage(float damage)
         {
-            //Debug.Log("View get damage");
                 GettingDamage?.Invoke(damage);
         }
 

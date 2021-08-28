@@ -13,18 +13,6 @@ public class TwinGun : BallisticWeapon, IWeapon
         ShootFromBarrel(_secondBarrelTransform, direction);
     }
 
-    public void Instantiate(Transform barrel, GameObject ammo, float shootStartForce)
-    {
-        CreateBulletTypePoolWhithBuilder();
-
-        _force = shootStartForce;
-        Vector3 firstBarrelPosition = new Vector3(barrel.position.x - 0.5f, barrel.position.y );
-        Vector3 secondBarrelPosition = new Vector3(barrel.position.x + 0.5f , barrel.position.y );
-
-        _firstBarrelTransform = CreateBarrel("1stBarrel", barrel, firstBarrelPosition);
-        _secondBarrelTransform = CreateBarrel("2ndBarrel", barrel, secondBarrelPosition);
-    }
-
     private Transform CreateBarrel(string barrelName, Transform barrelParent, Vector2 barrelPosition)
     {
         GameObject barrel = new GameObject(barrelName);
@@ -33,5 +21,17 @@ public class TwinGun : BallisticWeapon, IWeapon
         var barrelTransform = barrel.transform;
 
         return barrelTransform;
+    }
+
+    public void Instantiate(Transform barrel, AmmoData ammo, float shootStartForce)
+    {
+        CreateBulletTypePoolWhithBuilder(ammo);
+
+        _force = shootStartForce;
+        Vector3 firstBarrelPosition = new Vector3(barrel.position.x - 0.5f, barrel.position.y);
+        Vector3 secondBarrelPosition = new Vector3(barrel.position.x + 0.5f, barrel.position.y);
+
+        _firstBarrelTransform = CreateBarrel("1stBarrel", barrel, firstBarrelPosition);
+        _secondBarrelTransform = CreateBarrel("2ndBarrel", barrel, secondBarrelPosition);
     }
 }

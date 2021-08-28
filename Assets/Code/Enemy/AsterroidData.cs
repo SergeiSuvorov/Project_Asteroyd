@@ -12,16 +12,18 @@ namespace Asteroids
         public GameObject EnemyGameObject => _enemyGameObject;
 
         [SerializeField] private  float _health;
-        public Health Health => CreateRandomHealth();
+        public float Health => _health;
+        [SerializeField] private float _damage;
+        public float Damage => _damage;
 
-       
 
-        private Health CreateRandomHealth()
+
+        public Health CreateRandomHealth()
         {
             var maxRandomHealth = _health + _health / 2;
             var minRandomHealth = _health - _health / 2;
 
-            var randomHealthValue = Random.Range(minRandomHealth,maxRandomHealth);
+            var randomHealthValue = Random.Range(minRandomHealth, maxRandomHealth);
             Health randomHealth = new Health(randomHealthValue, randomHealthValue);
             return randomHealth;
         }

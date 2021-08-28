@@ -15,3 +15,4 @@ MonoBehaviour:
   _enemyGameObject: {fileID: 5640690704582196838, guid: 4fba7bee21fe435488658f7b33da507f,
     type: 3}
   _health: 50
+  _damage: 50

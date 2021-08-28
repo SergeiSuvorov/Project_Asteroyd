@@ -11,9 +11,9 @@ public class Gun : BallisticWeapon, IWeapon
         ShootFromBarrel(_barrel, direction);
     }
 
-    public void Instantiate(Transform barrel, GameObject ammo, float shootStartForce)
+    public void Instantiate(Transform barrel, AmmoData ammo, float shootStartForce)
     {
-        CreateBulletTypePoolWhithBuilder();
+        CreateBulletTypePoolWhithBuilder(ammo);
         _barrel = barrel;
         _force = shootStartForce;
     }

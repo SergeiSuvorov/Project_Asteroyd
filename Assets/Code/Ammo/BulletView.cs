@@ -7,9 +7,8 @@ using UnityEngine;
 public class BulletView : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D _bulletRigidbody;
-    [SerializeField] private float _damage=50;// будет измененно при появлении модели
 
-    public Action InCollision;
+    public Action<GameObject> InCollision;
 
     private void Awake()
     {
@@ -23,10 +22,8 @@ public class BulletView : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.GetComponent<IHealth>() != null)
-            collision.gameObject.GetComponent<IHealth>().GetDamage(_damage);
-
-        InCollision?.Invoke();
+        //Debug.Log(collision.gameObject);
+        InCollision?.Invoke(collision.gameObject);
     }
 
 }

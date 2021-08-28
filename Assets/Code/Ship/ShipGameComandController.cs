@@ -6,7 +6,7 @@ namespace Asteroids
 {
     public class ShipGameComandController : ShipController
     {
-        public ShipGameComandController(GameObject shipGameObject, ShipData shipData): base(shipGameObject, shipData)
+        public ShipGameComandController(ShipData shipData, WeaponData weaponData, Transform shipGameObjectParent) : base( shipData, weaponData, shipGameObjectParent)
         {
 
         }

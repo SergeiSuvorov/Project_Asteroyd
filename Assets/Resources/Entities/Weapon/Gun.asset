@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _force: 10
   _weaponType: 0
+  _ammoData: {fileID: 11400000, guid: e45c5162fe367a441851b5a12d96f84c, type: 2}

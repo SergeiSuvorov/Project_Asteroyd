@@ -5,9 +5,9 @@ namespace Asteroids
 {
     internal sealed class GameStarter 
     {
-        private PlayerController CreatePlayer(GameObject bulletGameObject, GameObject shipGameObject, ShipData shipData, Transform barrelTransform, WeaponData weaponData)
+        private PlayerController CreatePlayer(GameObject playerGameObject, ShipData shipData, WeaponData weaponData)
         {
-            return new PlayerController(bulletGameObject, shipGameObject, shipData, barrelTransform, weaponData);
+            return new PlayerController(playerGameObject, shipData, weaponData);
         }
 
         private Input CreateInputController(GameController gameController)
@@ -40,11 +40,11 @@ namespace Asteroids
             return new TimeRemainingController();
         }
 
-        public void CreateGame(GameObject bulletGameObject, GameObject shipGameObject, ShipData shipData, Transform barrelTransform, WeaponData weaponData,GameController gameController, out PlayerController playerController,out ListExecuteObject listExecuteObject,out Input inputController,out AsterroidManager asterroidManager)
+        public void CreateGame(GameObject playerGameObject, ShipData shipData, WeaponData weaponData,GameController gameController, out PlayerController playerController,out ListExecuteObject listExecuteObject,out Input inputController,out AsterroidManager asterroidManager)
         {
             TimeRemainingController timeRemainingController = CreateTimeRemainingController();
             listExecuteObject = CreateExecuteList();
-            playerController = CreatePlayer(bulletGameObject, shipGameObject, shipData, barrelTransform, weaponData);
+            playerController = CreatePlayer( playerGameObject, shipData,  weaponData);
             inputController = CreateInputController(gameController);
             asterroidManager =CreateAsterroids();
             listExecuteObject = FillExecuteList(listExecuteObject, inputController, asterroidManager, timeRemainingController);

@@ -10,6 +10,7 @@ public class BulletController :IExecute, ITypePoolObject
     [SerializeField] private BulletView _bulletView;
     [SerializeField] private GameObject _bulletGameObject;
     [SerializeField] private GameObject _poolGameObject;
+    [SerializeField] private BulletModel _bulletModel;
     private Vector2 _shootDirection;
     private float _shootStartForce;
     private float _lifeTime = 3f; // время жизни пули - за это время она успевает вылететь за прeделы экрана
@@ -24,7 +25,17 @@ public class BulletController :IExecute, ITypePoolObject
         _poolGameObject = new GameObject();
         _poolGameObject.name = "Bullet Pool";
 
-        UpdateBulletView();
+        UpdateBullet();
+    }
+
+    public BulletController(AmmoData ammoData)
+    {
+        _bulletGameObject = UnityEngine.Object.Instantiate(ammoData.AmmoGO);
+        _poolGameObject = new GameObject();
+        _poolGameObject.name = "Bullet Pool";
+        _bulletModel = new BulletModel(ammoData);
+
+        UpdateBullet();
     }
 
     public void Shooting(Transform barrel, Vector2 direction, float shootStartForce)
@@ -37,10 +48,21 @@ public class BulletController :IExecute, ITypePoolObject
     }
 
   
+   public void onCollision(GameObject collision)
+   {
+        Debug.Log(collision.gameObject.name);
+        
+            if (collision.activeSelf && collision.GetComponent<IHealth>() != null)
+                collision.gameObject.GetComponent<IHealth>().GetDamage(_bulletModel.Damage);
+
+        DeactiveBullet();
+   }
    public void DeactiveBullet()
    {
+       
         _lifeTime = 0;
-        _bulletView.InCollision += null;
+        _bulletView.InCollision -= onCollision;
+        //_bulletView.InCollision -= DeactiveBullet;
         BulletLifeIsEnd?.Invoke(this);
    }
 
@@ -57,7 +79,7 @@ public class BulletController :IExecute, ITypePoolObject
         
     }
 
-    private void UpdateBulletView()
+    private void UpdateBullet()
     {
         if (_bulletGameObject.GetComponent<BulletView>() == null)
             throw new ArgumentException("BulletPrefab must be have a BulletView");
@@ -70,7 +92,9 @@ public class BulletController :IExecute, ITypePoolObject
         _lifeTime = 0;
         _bulletRigidbody.velocity = Vector2.zero;
         _shootStartForce = 0;
+        
         _bulletGameObject.transform.parent = _poolGameObject.transform;
+        //Debug.Log(_bulletGameObject.transform.parent.name);
         _bulletView.gameObject.SetActive(false);
         IsActive = false;
     }
@@ -79,16 +103,20 @@ public class BulletController :IExecute, ITypePoolObject
     {
         _bulletGameObject.transform.parent = null;
         _bulletView.gameObject.SetActive(true);
-        _bulletView.InCollision += DeactiveBullet;
+        _bulletView.InCollision += onCollision;
+        //_bulletView.InCollision -= DeactiveBullet;
         IsActive = true;
+        Debug.Log(_bulletModel.Damage);
     }
 
     public void ExecuteAfterDeepCopy()
     {
+        Debug.Log(_bulletModel.Damage);
         _bulletGameObject = UnityEngine.Object.Instantiate(_bulletGameObject);
-        UpdateBulletView();
+        UpdateBullet();
 
-        _bulletView.InCollision += DeactiveBullet;
+        _bulletView.InCollision -= onCollision;
+        //_bulletView.InCollision -= DeactiveBullet;
 
         if (_poolGameObject==null)
         {

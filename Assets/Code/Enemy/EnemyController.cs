@@ -9,35 +9,16 @@ namespace Asteroids
     public abstract class EnemyController : IHealth
     {
 
-
-        [SerializeField] protected Health _health;
         [SerializeField] protected GameObject _enemyGameObject;
         public GameObject EnemyGameObject => _enemyGameObject;
-
-
-        [SerializeField] public Health Health
-        {
-            get
-            {
-                
-                return _health;
-            }
-            protected set => _health = value;
-        }
-
-    
-        public EnemyController(GameObject gameObject, Health health)
+   
+        public EnemyController(GameObject gameObject)
         {
             _enemyGameObject = gameObject;
-            _health = health;
         }
 
-  
         public abstract void GetDamage(float damage);
 
-
         public abstract void SetHealthAid(float healthAid);
-       
-
     }
 }

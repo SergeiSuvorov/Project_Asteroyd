@@ -32,22 +32,9 @@ public abstract class BallisticWeapon
         }
     }
 
-    
-
-    /// <summary>
-    /// Ильзуется для создания TypePool на основе GameObjecta сделанного с помощью строителя
-    /// </summary>
-    /// <param name="bulletGameOject"></param>
-    protected void CreateBulletTypePoolWhithBuilder()
+    protected void CreateBulletTypePoolWhithBuilder(AmmoData ammoData)
     {
-        var bulletSprite = Resources.Load<Sprite>("Sprite/Bullet");
-        var bulletGameOject = new GameObject().SetName("Bullet")
-                                           .AddSprite(bulletSprite)
-                                           .AddRigidbody2D(1)
-                                           .AddCircleCollider2D()
-                                           .GetOrAddComponent<BulletView>().gameObject;
-
-        var bulletController = new BulletController(bulletGameOject);
+        var bulletController = new BulletController(ammoData);
         _typePool = new TypePool<BulletController>(bulletController);
         _typePool.ReturnToPool(bulletController);
 
@@ -66,7 +53,6 @@ public abstract class BallisticWeapon
         }
     }
 
-
     /// <summary>
     /// Метод вызывающий BuletController из пула и передающий команду на выстрел, использует TypePool
     /// </summary>
@@ -75,8 +61,6 @@ public abstract class BallisticWeapon
         var bulletController = CreateBulletFromTypePool();
         bulletController.Shooting(barrel,direction,_force);
     }
-
-    
 
     /// <summary>
     /// Возвращает пулю в TypePool
@@ -92,7 +76,7 @@ public abstract class BallisticWeapon
     /// </summary>
     private void onBulletDestroyPool(BulletController bullet)
     {
-        bullet.BulletLifeIsEnd += null;
+        bullet.BulletLifeIsEnd -= onBulletDestroyPool;
         _typePool.ReturnToPool(bullet);
     }
 

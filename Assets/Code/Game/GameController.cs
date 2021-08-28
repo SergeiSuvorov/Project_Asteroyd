@@ -33,7 +33,7 @@ namespace Asteroids
         public void CreateGame()
         {
             GameStarter gameStarter = new GameStarter();
-            gameStarter.CreateGame(_bulletGameObject, _shipGameObject, _shipData, _barrel, _weaponData, this, out _playerController, out _listExecuteObject, out _inputController, out _asterroidManager);
+            gameStarter.CreateGame(_playerGameObject, _shipData, _weaponData, this, out _playerController, out _listExecuteObject, out _inputController, out _asterroidManager);
             SubscribeToEvents();
             CreateEnemysChain();
             _scoreCounter = new ScoreCounter(_canvasController);
@@ -43,9 +43,9 @@ namespace Asteroids
         private void CreateEnemysChain()
         {
             _enemyManagerModifire = new EnemyManagerModifire(_asterroidManager);
-            _enemyManagerModifire.Add(new AddEnemyModifire(_asterroidManager, 5));
-            _enemyManagerModifire.Add(new AddEnemyModifire(_asterroidManager, 20));
-            _enemyManagerModifire.Add(new AddEnemyModifire(_asterroidManager, 1));
+            _enemyManagerModifire.Add(new AddEnemyModifire(_asterroidManager, 50));
+            _enemyManagerModifire.Add(new AddEnemyModifire(_asterroidManager, 200));
+            _enemyManagerModifire.Add(new AddEnemyModifire(_asterroidManager, 100));
             _enemyManagerModifire.Handle();
         }
 
@@ -124,7 +124,7 @@ namespace Asteroids
                 _playerController.ChangeAcceleretionMode();
             }
 
-            _playerController.Rotation(mousePosition);
+            //_playerController.Rotation(mousePosition);
         }
     }
 }

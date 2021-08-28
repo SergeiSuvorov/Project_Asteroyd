@@ -57,11 +57,11 @@ namespace Asteroids.Proxy.ProxyProtection
             _currentAmmoCount = _ammoCount;
             Debug.Log("Weapon is unlock");
         }
-        public void Instantiate(Transform barrel, GameObject ammo, float shootStartForce)
+       
+        public void Instantiate(Transform barrel, AmmoData ammo, float shootStartForce)
         {
             _weapon.Instantiate(barrel, ammo, shootStartForce);
         }
-
     }
 }
 

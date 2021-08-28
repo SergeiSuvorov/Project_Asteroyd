@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Asteroids.Visitor;
 using ObjectPool;
 using UniRx;
 using UnityEngine;
@@ -9,26 +10,32 @@ using UnityEngine;
 namespace Asteroids
 {
     [Serializable]
-    public class AsterroidController : EnemyController,ITypePoolObject
+    public class AsterroidController : EnemyController,ITypePoolObject, IDestroy, IActivate
     {
         [SerializeField] protected AsterroidView _asterroidView;
+        [SerializeField] protected AsterroidModel _asterroidModel;
         [SerializeField] private GameObject _poolGameObject;
         [SerializeField] protected int _gameObjectCloneCount;
-        [SerializeField] protected float _healthMax;
-        public Action < AsterroidController > IsDestroy;
+        public event Action <EnemyController> IsDestroy;
         
-        public AsterroidController(GameObject gameObject, Health health) : base(gameObject, health)
+        public AsterroidController(GameObject gameObject, AsterroidData asterroidData) : base(gameObject)
         {
-            _healthMax =_health.Max;
+            _asterroidModel = new AsterroidModel(asterroidData);
             _poolGameObject = new GameObject();
             _poolGameObject.name = "Asterroid Pool";
-
             UpdateAsterroidView();
         }
-       
+
+        public void onCollision(GameObject collision)
+        {
+            Debug.Log(collision.gameObject.name);
+            Debug.Log(_asterroidModel.Damage);
+            if (collision.activeSelf && collision.GetComponent<IHealth>() != null)
+                collision.gameObject.GetComponent<IHealth>().GetDamage(_asterroidModel.Damage);
+        }
+
         public void  UpdateAsterroidView()
         {
-           
             _enemyGameObject = UnityEngine.Object.Instantiate(_enemyGameObject);
             _enemyGameObject.name = "Asterroir" + UnityEngine.Random.Range(1,10);
             _gameObjectCloneCount++;
@@ -36,13 +43,12 @@ namespace Asteroids
                 throw new ArgumentException("AsterroidPrefab must be have a AsterroidView");
 
             _asterroidView = _enemyGameObject.GetComponent<AsterroidView>();
-
         }
         public void UpdateHealth(float healthValue)
         {
-            _health.ChangeCurrentHealth(healthValue);
+            _asterroidModel.Health.ChangeCurrentHealth(healthValue);
         }
-
+      
         public void SetRandomStartPosition(float xMin, float xMax, float yMin, float yMax)
         {
             float xEnemyPosition = UnityEngine.Random.Range(xMin, xMax);
@@ -54,24 +60,23 @@ namespace Asteroids
         public void ExecuteBeforReturnToPool()
         {
             _asterroidView.GettingDamage -= GetDamage;
+            _asterroidView.InCollision -= onCollision;
             _enemyGameObject.transform.parent = _poolGameObject.transform;
             _enemyGameObject.SetActive(false);
-           
         }
 
         public void ExecuteAfterGetToPool()
         {
             _asterroidView.GettingDamage += GetDamage;
+            _asterroidView.InCollision += onCollision;
             _enemyGameObject.SetActive(true);
             _enemyGameObject.transform.parent = null;
-            UpdateHealth(_healthMax);
-            Debug.Log("Здоровья в объекте" + _enemyGameObject.name + " " + _health.Current);
+            UpdateHealth(_asterroidModel.Health.Max);
         }
 
         public void ExecuteAfterDeepCopy()
         {
-            Debug.Log("clone "+_gameObjectCloneCount);
-            Debug.Log("health "+ _healthMax);
+            //Debug.Log("health " + _asterroidModel.Health.Max);
             UpdateAsterroidView();
 
             if (_poolGameObject == null)
@@ -83,10 +88,11 @@ namespace Asteroids
 
         public override void GetDamage(float damage)
         {
-            Debug.Log("Попали в объект" + _enemyGameObject.name + " " + _health.Current);
-            _health.Damage(damage);
-            Debug.Log("Результат попадания в " + _enemyGameObject.name + " " + _health.Current);
-            if (_health.Current <= 0.0f)
+            Debug.Log("Damage " + damage);
+            Debug.Log("Before " + _asterroidModel.Health.Current);
+            _asterroidModel.Health.Damage(damage);
+            Debug.Log("After " + _asterroidModel.Health.Current);
+            if (_asterroidModel.Health.Current <= 0.0f)
             {
                 IsDestroy?.Invoke(this);
                 SendMessageAboutDestroy();
@@ -104,7 +110,12 @@ namespace Asteroids
         }
         public override void SetHealthAid(float healthAid)
         {
-            _health.SetHealthAid(healthAid);
+            _asterroidModel.Health.SetHealthAid(healthAid);
+        }
+
+        public void Activate(IActivateAtScene value)
+        {
+            value.ActivateAtScene(this);
         }
     }
 
